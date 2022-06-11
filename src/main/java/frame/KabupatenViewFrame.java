@@ -25,6 +25,9 @@ public class KabupatenViewFrame  extends  JFrame{
     private JScrollPane viewScrollPane;
 
     public KabupatenViewFrame(){
+        tambahButton.addActionListener(e -> {
+            KabupatenInputFrame frame = new KabupatenInputFrame();
+        });
         cariButton.addActionListener(e -> {
             Connection c = Koneksi.getConnection();
             String keyword = "%" + cariTextField.getText() + "%";
