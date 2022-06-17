@@ -1,10 +1,14 @@
+import frame.KabupatenInputFrame;
 import frame.KabupatenViewFrame;
+import frame.KecamatanInputFrame;
+import frame.KecamatanViewFrame;
 import helpers.Koneksi;
 
 public class Main {
     public static void main(String[] args) {
 //        Koneksi.getConnection();
-        KabupatenViewFrame viewFrame = new KabupatenViewFrame();
+//        KabupatenViewFrame viewFrame = new KabupatenViewFrame();
+        KecamatanViewFrame viewFrame = new KecamatanViewFrame();
         viewFrame.setVisible(true);
     }
 }
