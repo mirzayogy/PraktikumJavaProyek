@@ -25,8 +25,24 @@ public class KabupatenViewFrame  extends  JFrame{
     private JScrollPane viewScrollPane;
 
     public KabupatenViewFrame(){
+        ubahButton.addActionListener(e -> {
+            int barisTerpilih = viewTable.getSelectedRow();
+            if(barisTerpilih < 0){
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Pilih data dulu");
+                return;
+            }
+            TableModel tm = viewTable.getModel();
+            int id = Integer.parseInt(tm.getValueAt(barisTerpilih,0).toString());
+            KabupatenInputFrame inputFrame = new KabupatenInputFrame();
+            inputFrame.setId(id);
+            inputFrame.isiKomponen();
+            inputFrame.setVisible(true);
+        });
         tambahButton.addActionListener(e -> {
-            KabupatenInputFrame frame = new KabupatenInputFrame();
+            KabupatenInputFrame inputFrame = new KabupatenInputFrame();
+            inputFrame.setVisible(true);
         });
         cariButton.addActionListener(e -> {
             Connection c = Koneksi.getConnection();
@@ -73,12 +89,8 @@ public class KabupatenViewFrame  extends  JFrame{
                 }
             }
         });
-        tutupButton.addActionListener(e -> {
-            dispose();
-        });
-        batalButton.addActionListener(e -> {
-            isiTable();
-        });
+        tutupButton.addActionListener(e -> dispose());
+        batalButton.addActionListener(e -> isiTable());
         isiTable();
         addWindowListener(new WindowAdapter(){
             @Override
@@ -94,7 +106,6 @@ public class KabupatenViewFrame  extends  JFrame{
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     public void isiTable(){
@@ -103,7 +114,7 @@ public class KabupatenViewFrame  extends  JFrame{
         try {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(selectSQL);
-            String header[] = {"Id","Nama Kabupaten"};
+            String[] header = {"Id","Nama Kabupaten"};
             DefaultTableModel dtm = new DefaultTableModel(header,0);
             viewTable.setModel(dtm);
             Object[] row = new Object[2];
