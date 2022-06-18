@@ -123,6 +123,7 @@ public class KecamatanViewFrame extends JFrame {
         setContentPane(mainPanel);
         setTitle("Data Kecamatan");
         pack();
+        setSize(700,525);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
@@ -134,31 +135,42 @@ public class KecamatanViewFrame extends JFrame {
         try {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(selectSQL);
-            String[] header = {"Id","Nama Kecamatan", "Nama Kabupaten", "Klasifikasi","Populasi","Luas"};
+            String[] header = {"Id","Nama Kecamatan", "Nama Kabupaten", "Klasifikasi","Tanggal","Populasi","Luas"};
             DefaultTableModel dtm = new DefaultTableModel(header,0);
             viewTable.setModel(dtm);
             viewTable.getColumnModel().getColumn(0).setMaxWidth(32);
             viewTable.getColumnModel().getColumn(1).setMinWidth(150);
             viewTable.getColumnModel().getColumn(2).setMinWidth(150);
+            viewTable.getColumnModel().getColumn(4).setMinWidth(120);
 
             DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
             rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-            viewTable.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
             viewTable.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+            viewTable.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
 
-            Object[] row = new Object[6];
+            Object[] row = new Object[7];
             while (rs.next()){
 
                 NumberFormat nf = NumberFormat.getInstance(Locale.US);
                 String rowPopulasi = nf.format(rs.getInt("populasi"));
                 String rowLuas = String.format("%,.2f", rs.getDouble("luas"));
 
+                String tanggalIndo = "";
+                if(rs.getString("tanggalmulai") != null){
+                    String tanggalString = rs.getString("tanggalmulai").substring(8);
+                    String bulanString = rs.getString("tanggalmulai").substring(5,7);
+                    String tahunString = rs.getString("tanggalmulai").substring(0,4);
+
+                    tanggalIndo = tanggalString + "-" + bulanString + "-" +tahunString;
+                }
+
                 row[0] = rs.getInt("id");
                 row[1] = rs.getString("nama");
                 row[2] = rs.getString("nama_kabupaten");
                 row[3] = rs.getString("klasifikasi");
-                row[4] = rowPopulasi;
-                row[5] = rowLuas;
+                row[4] = tanggalIndo;
+                row[5] = rowPopulasi;
+                row[6] = rowLuas;
                 dtm.addRow(row);
             }
         } catch (SQLException e) {
